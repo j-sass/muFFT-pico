@@ -18,10 +18,10 @@
 
 #include "fft.h"
 #include "fft_internal.h"
-#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include <malloc.h>
 
 /// ABI compatible struct for \ref mufft_step_1d and \ref mufft_step_2d.
 struct mufft_step_base
@@ -1034,12 +1034,7 @@ void *mufft_alloc(size_t size)
 #if defined(_ISOC11_SOURCE)
     return aligned_alloc(MUFFT_ALIGNMENT, size);
 #elif (_POSIX_C_SOURCE >= 200112L) || (_XOPEN_SOURCE >= 600)
-    void *ptr = NULL;
-    if (posix_memalign(&ptr, MUFFT_ALIGNMENT, size) < 0)
-    {
-        return NULL;
-    }
-    return ptr;
+    return memalign(MUFFT_ALIGNMENT, sizeof(size));
 #else
     // Align stuff ourselves. Kinda ugly, but will work anywhere.
     void **place;
