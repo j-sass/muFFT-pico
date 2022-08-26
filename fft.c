@@ -1033,8 +1033,6 @@ void *mufft_alloc(size_t size)
 {
 #if defined(_ISOC11_SOURCE)
     return aligned_alloc(MUFFT_ALIGNMENT, size);
-#elif (_POSIX_C_SOURCE >= 200112L) || (_XOPEN_SOURCE >= 600)
-    return memalign(MUFFT_ALIGNMENT, sizeof(size));
 #else
     // Align stuff ourselves. Kinda ugly, but will work anywhere.
     void **place;
